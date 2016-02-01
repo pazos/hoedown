@@ -21,12 +21,22 @@
             "output": "MarkdownTest_1.0.3/Tests/Code Blocks.html"
         },
         {
+            "input": "MarkdownTest_1.0.3/Tests/Code Blocks.text",
+            "output": "MarkdownTest_1.0.3/Tests/Code Blocks.latex",
+            "flags": ["--latex"]
+        },
+        {
             "input": "MarkdownTest_1.0.3/Tests/Code Spans.text",
             "output": "MarkdownTest_1.0.3/Tests/Code Spans.html"
         },
         {
             "input": "MarkdownTest_1.0.3/Tests/Hard-wrapped paragraphs with list-like lines.text",
             "output": "MarkdownTest_1.0.3/Tests/Hard-wrapped paragraphs with list-like lines.html"
+        },
+        {
+            "input": "MarkdownTest_1.0.3/Tests/Hard-wrapped paragraphs with list-like lines.text",
+            "output": "MarkdownTest_1.0.3/Tests/Hard-wrapped paragraphs with list-like lines.latex",
+            "flags": ["--latex", "--hard-wrap"]
         },
         {
             "input": "MarkdownTest_1.0.3/Tests/Horizontal rules.text",
@@ -115,6 +125,16 @@
             "input": "Tests/Table.text",
             "output": "Tests/Table.html",
             "flags": ["--tables"]
+        },
+        {
+            "input": "Tests/FencedCode.text",
+            "output": "Tests/FencedCode.html",
+            "flags": ["--fenced-code"]
+        },
+        {
+            "input": "Tests/FencedCode.text",
+            "output": "Tests/FencedCode.latex",
+            "flags": ["--fenced-code", "--latex"]
         },
         {
             "input": "Tests/Images.text",
