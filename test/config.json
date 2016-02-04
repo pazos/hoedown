@@ -122,6 +122,11 @@
             "output": "MarkdownTest_1.0.3/Tests/Ordered and unordered lists.html"
         },
         {
+            "input": "MarkdownTest_1.0.3/Tests/Ordered and unordered lists.text",
+            "output": "MarkdownTest_1.0.3/Tests/Ordered and unordered lists.latex",
+            "flags": ["--latex"]
+        },
+        {
             "input": "MarkdownTest_1.0.3/Tests/Strong and em together.text",
             "output": "MarkdownTest_1.0.3/Tests/Strong and em together.html"
         },

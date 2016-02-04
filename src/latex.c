@@ -128,6 +128,30 @@ rndr_link(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_buffe
 }
 
 static void
+rndr_list(hoedown_buffer *ob, const hoedown_buffer *content, hoedown_list_flags flags, const hoedown_renderer_data *data)
+{
+	char* env = (flags & HOEDOWN_LIST_ORDERED) ? "enumerate" : "itemize";
+	if (ob->size) hoedown_buffer_putc(ob, '\n');
+	hoedown_buffer_printf(ob, "\\begin{%s}\n", env);
+	if (content) hoedown_buffer_put(ob, content->data, content->size);
+	hoedown_buffer_printf(ob, "\\end{%s}\n", env);
+}
+
+static void
+rndr_listitem(hoedown_buffer *ob, const hoedown_buffer *content, hoedown_list_flags flags, const hoedown_renderer_data *data)
+{
+	HOEDOWN_BUFPUTSL(ob, "\\item ");
+	if (content) {
+		size_t size = content->size;
+		while (size && content->data[size - 1] == '\n')
+			size--;
+
+		hoedown_buffer_put(ob, content->data, size);
+		hoedown_buffer_putc(ob, '\n');
+	}
+}
+
+static void
 rndr_paragraph(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
 {
 	hoedown_latex_renderer_state *state = data->opaque;
@@ -221,8 +245,8 @@ hoedown_latex_renderer_new(hoedown_latex_flags render_flags, int nesting_level)
 		rndr_blockquote,
 		rndr_header,
 		rndr_hrule,
-		NULL, /* rndr_list,*/
-		NULL, /* rndr_listitem,*/
+		rndr_list,
+		rndr_listitem,
 		rndr_paragraph,
 		NULL, /* rndr_table,*/
 		NULL, /* rndr_table_header,*/
