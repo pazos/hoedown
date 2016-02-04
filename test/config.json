@@ -59,12 +59,27 @@
             "output": "MarkdownTest_1.0.3/Tests/Links, inline style.html"
         },
         {
+            "input": "MarkdownTest_1.0.3/Tests/Links, inline style.text",
+            "output": "MarkdownTest_1.0.3/Tests/Links, inline style.latex",
+            "flags": ["--latex"]
+        },
+        {
             "input": "MarkdownTest_1.0.3/Tests/Links, reference style.text",
             "output": "MarkdownTest_1.0.3/Tests/Links, reference style.html"
         },
         {
+            "input": "MarkdownTest_1.0.3/Tests/Links, reference style.text",
+            "output": "MarkdownTest_1.0.3/Tests/Links, reference style.latex",
+            "flags": ["--latex"]
+        },
+        {
             "input": "MarkdownTest_1.0.3/Tests/Links, shortcut references.text",
             "output": "MarkdownTest_1.0.3/Tests/Links, shortcut references.html"
+        },
+        {
+            "input": "MarkdownTest_1.0.3/Tests/Links, shortcut references.text",
+            "output": "MarkdownTest_1.0.3/Tests/Links, shortcut references.latex",
+            "flags": ["--latex"]
         },
         {
             "input": "MarkdownTest_1.0.3/Tests/Literal quotes in titles.text",
@@ -140,6 +155,11 @@
             "input": "Tests/Images.text",
             "output": "Tests/Images.html",
             "flags": []
+        },
+        {
+            "input": "Tests/Images.text",
+            "output": "Tests/Images.latex",
+            "flags": ["--latex"]
         }
     ]
 }

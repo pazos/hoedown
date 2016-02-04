@@ -12,6 +12,11 @@ static void escape_latex(hoedown_buffer *ob, const uint8_t *source, size_t lengt
 	hoedown_escape_latex(ob, source, length, 0);
 }
 
+static void escape_href(hoedown_buffer *ob, const uint8_t *source, size_t length)
+{
+	hoedown_escape_href(ob, source, length);
+}
+
 /********************
  * GENERIC RENDERER *
  ********************/
@@ -39,6 +44,36 @@ static int
 rndr_linebreak(hoedown_buffer *ob, const hoedown_renderer_data *data)
 {
 	HOEDOWN_BUFPUTSL(ob, "\\\\\n");
+	return 1;
+}
+
+static int
+rndr_link(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_buffer *link, const hoedown_buffer *title, const hoedown_renderer_data *data)
+{
+	if (link && link->size > 0 && hoedown_buffer_prefix(link, "#") == 0) {
+		HOEDOWN_BUFPUTSL(ob, "\\hyperref[");
+
+		if (link && link->size)
+			hoedown_buffer_put(ob, link->data + 1, link->size - 1);
+
+		HOEDOWN_BUFPUTSL(ob, "]{");
+	}
+	else {
+		HOEDOWN_BUFPUTSL(ob, "\\hyperref{");
+
+		if (link && link->size)
+			escape_href(ob, link->data, link->size);
+
+		HOEDOWN_BUFPUTSL(ob, "}{}{");
+
+		if (title && title->size)
+			escape_latex(ob, title->data, title->size);
+
+		HOEDOWN_BUFPUTSL(ob, "}{");
+	}
+
+	if (content && content->size) hoedown_buffer_put(ob, content->data, content->size);
+	hoedown_buffer_putc(ob, '}');
 	return 1;
 }
 
@@ -84,6 +119,28 @@ rndr_paragraph(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_
 	hoedown_buffer_putc(ob, '\n');
 }
 
+static int
+rndr_image(hoedown_buffer *ob, const hoedown_buffer *link, const hoedown_buffer *title, const hoedown_buffer *alt, const hoedown_renderer_data *data)
+{
+	if (!link || !link->size) return 0;
+
+	HOEDOWN_BUFPUTSL(ob, "\\begin{figure*}\n\\includegraphics*[width=\\textwidth]{");
+	escape_href(ob, link->data, link->size);
+	HOEDOWN_BUFPUTSL(ob, "}\n");
+
+	if (alt && alt->size) {
+		HOEDOWN_BUFPUTSL(ob, "\\caption{");
+		escape_latex(ob, alt->data, alt->size);
+		HOEDOWN_BUFPUTSL(ob, "}\n"); }
+
+	if (title && title->size) {
+		escape_latex(ob, title->data, title->size);
+		hoedown_buffer_putc(ob, '\n'); }
+
+	HOEDOWN_BUFPUTSL(ob, "\\end{figure*}");
+	return 1;
+}
+
 static void
 rndr_normal_text(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
 {
@@ -120,9 +177,9 @@ hoedown_latex_renderer_new(hoedown_latex_flags render_flags, int nesting_level)
 		NULL, /* rndr_underline,*/
 		NULL, /* rndr_highlight,*/
 		NULL, /* rndr_quote,*/
-		NULL, /* rndr_image,*/
+		rndr_image,
 		rndr_linebreak,
-		NULL, /* rndr_link,*/
+		rndr_link,
 		NULL, /* rndr_triple_emphasis,*/
 		NULL, /* rndr_strikethrough,*/
 		NULL, /* rndr_superscript,*/
