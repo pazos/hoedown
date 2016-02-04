@@ -17,6 +17,11 @@
             "output": "MarkdownTest_1.0.3/Tests/Blockquotes with code blocks.html"
         },
         {
+            "input": "MarkdownTest_1.0.3/Tests/Blockquotes with code blocks.text",
+            "output": "MarkdownTest_1.0.3/Tests/Blockquotes with code blocks.latex",
+            "flags": ["--latex"]
+        },
+        {
             "input": "MarkdownTest_1.0.3/Tests/Code Blocks.text",
             "output": "MarkdownTest_1.0.3/Tests/Code Blocks.html"
         },
@@ -106,6 +111,11 @@
         {
             "input": "MarkdownTest_1.0.3/Tests/Nested blockquotes.text",
             "output": "MarkdownTest_1.0.3/Tests/Nested blockquotes.html"
+        },
+        {
+            "input": "MarkdownTest_1.0.3/Tests/Nested blockquotes.text",
+            "output": "MarkdownTest_1.0.3/Tests/Nested blockquotes.latex",
+            "flags": ["--fenced-code", "--latex"]
         },
         {
             "input": "MarkdownTest_1.0.3/Tests/Ordered and unordered lists.text",

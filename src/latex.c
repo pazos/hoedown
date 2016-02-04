@@ -40,6 +40,15 @@ rndr_blockcode(hoedown_buffer *ob, const hoedown_buffer *text, const hoedown_buf
 	hoedown_buffer_printf(ob, "\\end{%s}\n", env);
 }
 
+static void
+rndr_blockquote(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
+{
+	  if (ob->size) hoedown_buffer_putc(ob, '\n');
+		HOEDOWN_BUFPUTSL(ob, "\\begin{quotation}\n");
+		if (content) hoedown_buffer_put(ob, content->data, content->size);
+		HOEDOWN_BUFPUTSL(ob, "\\end{quotation}\n");
+}
+
 static int
 rndr_codespan(hoedown_buffer *ob, const hoedown_buffer *text, const hoedown_renderer_data *data)
 {
@@ -177,7 +186,7 @@ hoedown_latex_renderer_new(hoedown_latex_flags render_flags, int nesting_level)
 		NULL,
 
 		rndr_blockcode,
-		NULL, /* rndr_blockquote,*/
+		rndr_blockquote,
 		NULL, /* rndr_header,*/
 		rndr_hrule,
 		NULL, /* rndr_list,*/
