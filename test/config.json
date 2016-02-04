@@ -30,6 +30,11 @@
             "output": "MarkdownTest_1.0.3/Tests/Code Spans.html"
         },
         {
+            "input": "MarkdownTest_1.0.3/Tests/Code Spans.text",
+            "output": "MarkdownTest_1.0.3/Tests/Code Spans.latex",
+            "flags": ["--latex"]
+        },
+        {
             "input": "MarkdownTest_1.0.3/Tests/Hard-wrapped paragraphs with list-like lines.text",
             "output": "MarkdownTest_1.0.3/Tests/Hard-wrapped paragraphs with list-like lines.html"
         },

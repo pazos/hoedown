@@ -41,6 +41,15 @@ rndr_blockcode(hoedown_buffer *ob, const hoedown_buffer *text, const hoedown_buf
 }
 
 static int
+rndr_codespan(hoedown_buffer *ob, const hoedown_buffer *text, const hoedown_renderer_data *data)
+{
+	HOEDOWN_BUFPUTSL(ob, "\\texttt{");
+	if (text) escape_latex(ob, text->data, text->size);
+	hoedown_buffer_putc(ob, '}');
+	return 1;
+}
+
+static int
 rndr_linebreak(hoedown_buffer *ob, const hoedown_renderer_data *data)
 {
 	HOEDOWN_BUFPUTSL(ob, "\\\\\n");
@@ -141,6 +150,12 @@ rndr_image(hoedown_buffer *ob, const hoedown_buffer *link, const hoedown_buffer 
 	return 1;
 }
 
+static int
+rndr_raw_html(hoedown_buffer *ob, const hoedown_buffer *text, const hoedown_renderer_data *data)
+{
+	return 1;
+}
+
 static void
 rndr_normal_text(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
 {
@@ -171,7 +186,7 @@ hoedown_latex_renderer_new(hoedown_latex_flags render_flags, int nesting_level)
 		NULL, /* rndr_raw_block,*/
 
 		NULL, /* rndr_autolink,*/
-		NULL, /* rndr_codespan,*/
+		rndr_codespan,
 		NULL, /* rndr_double_emphasis,*/
 		NULL, /* rndr_emphasis,*/
 		NULL, /* rndr_underline,*/
@@ -185,7 +200,7 @@ hoedown_latex_renderer_new(hoedown_latex_flags render_flags, int nesting_level)
 		NULL, /* rndr_superscript,*/
 		NULL, /* rndr_footnote_ref,*/
 		NULL, /* rndr_math,*/
-		NULL, /* rndr_raw_html,*/
+		rndr_raw_html,
 
 		NULL,
 		rndr_normal_text,
