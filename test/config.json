@@ -48,6 +48,11 @@
             "output": "MarkdownTest_1.0.3/Tests/Horizontal rules.html"
         },
         {
+            "input": "MarkdownTest_1.0.3/Tests/Horizontal rules.text",
+            "output": "MarkdownTest_1.0.3/Tests/Horizontal rules.latex",
+            "flags": ["--latex"]
+        },
+        {
             "input": "MarkdownTest_1.0.3/Tests/Inline HTML (Advanced).text",
             "output": "MarkdownTest_1.0.3/Tests/Inline HTML (Advanced).html"
         },

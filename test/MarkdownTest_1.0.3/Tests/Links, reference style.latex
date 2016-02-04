@@ -18,6 +18,8 @@ Indented [four][] times.
 [four]: /url
 \end{verbatim}
 
+\hrule\vskip\baselineskip
+
 \hyperref{foo}{}{}{this} should work
 
 So should \hyperref{foo}{}{}{this}.
@@ -41,6 +43,8 @@ Nor [that].
 In this case, \hyperref{/somethingelse/}{}{}{this} points to something else.
 
 Backslashing should suppress [this] and [this].
+
+\hrule\vskip\baselineskip
 
 Here's one where the \hyperref{/url/}{}{}{link
 breaks} across lines.

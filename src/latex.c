@@ -128,6 +128,13 @@ rndr_paragraph(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_
 	hoedown_buffer_putc(ob, '\n');
 }
 
+static void
+rndr_hrule(hoedown_buffer *ob, const hoedown_renderer_data *data)
+{
+	  if (ob->size) hoedown_buffer_putc(ob, '\n');
+		  HOEDOWN_BUFPUTSL(ob, "\\hrule\\vskip\\baselineskip\n");
+}
+
 static int
 rndr_image(hoedown_buffer *ob, const hoedown_buffer *link, const hoedown_buffer *title, const hoedown_buffer *alt, const hoedown_renderer_data *data)
 {
@@ -172,7 +179,7 @@ hoedown_latex_renderer_new(hoedown_latex_flags render_flags, int nesting_level)
 		rndr_blockcode,
 		NULL, /* rndr_blockquote,*/
 		NULL, /* rndr_header,*/
-		NULL, /* rndr_hrule,*/
+		rndr_hrule,
 		NULL, /* rndr_list,*/
 		NULL, /* rndr_listitem,*/
 		rndr_paragraph,
