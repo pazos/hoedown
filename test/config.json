@@ -180,6 +180,16 @@
             "input": "Tests/Images.text",
             "output": "Tests/Images.latex",
             "flags": ["--latex"]
+        },
+        {
+            "input": "Tests/Header.text",
+            "output": "Tests/HeaderPlain.latex",
+            "flags": ["--latex"]
+        },
+        {
+            "input": "Tests/Header.text",
+            "output": "Tests/HeaderWithId.latex",
+            "flags": ["--latex", "--header-id"]
         }
     ]
 }

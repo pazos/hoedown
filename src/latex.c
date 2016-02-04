@@ -65,6 +65,38 @@ rndr_linebreak(hoedown_buffer *ob, const hoedown_renderer_data *data)
 	return 1;
 }
 
+static void
+rndr_header(hoedown_buffer *ob, const hoedown_buffer *content, int level, const hoedown_renderer_data *data)
+{
+	hoedown_latex_renderer_state *state = data->opaque;
+	if (ob->size) hoedown_buffer_putc(ob, '\n');
+
+	switch (level) {
+		case 1:
+			HOEDOWN_BUFPUTSL(ob, "\\section{"); break;
+		case 2:
+			HOEDOWN_BUFPUTSL(ob, "\\subsection{"); break;
+		case 3:
+			HOEDOWN_BUFPUTSL(ob, "\\subsubsection{"); break;
+		case 4:
+			HOEDOWN_BUFPUTSL(ob, "\\paragraph{"); break;
+		case 5:
+			HOEDOWN_BUFPUTSL(ob, "\\subparagraph{"); break;
+		default:
+			hoedown_buffer_putc(ob, '{'); break;
+	}
+
+	if (state->flags & HOEDOWN_LATEX_HEADER_ID) {
+		HOEDOWN_BUFPUTSL(ob, "\\label{");
+		if (content) hoedown_buffer_put(ob, content->data, content->size);
+		HOEDOWN_BUFPUTSL(ob, "}{");
+	}
+	if (content) hoedown_buffer_put(ob, content->data, content->size);
+	if (state->flags & HOEDOWN_LATEX_HEADER_ID)
+		hoedown_buffer_putc(ob, '}');
+	HOEDOWN_BUFPUTSL(ob, "}\n");
+}
+
 static int
 rndr_link(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_buffer *link, const hoedown_buffer *title, const hoedown_renderer_data *data)
 {
@@ -187,7 +219,7 @@ hoedown_latex_renderer_new(hoedown_latex_flags render_flags, int nesting_level)
 
 		rndr_blockcode,
 		rndr_blockquote,
-		NULL, /* rndr_header,*/
+		rndr_header,
 		rndr_hrule,
 		NULL, /* rndr_list,*/
 		NULL, /* rndr_listitem,*/

@@ -68,6 +68,7 @@ static struct render_flag_info html_flags_info[] = {
 
 static struct render_flag_info latex_flags_info[] = {
 	{HOEDOWN_LATEX_HARD_WRAP, "hard-wrap", "Render each linebreak as \\\\."},
+	{HOEDOWN_LATEX_HEADER_ID, "header-id", "Generate hyperref labels for headers."},
 };
 
 static const char *category_prefix = "all-";

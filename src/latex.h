@@ -15,7 +15,8 @@ extern "C" {
  *************/
 
 typedef enum hoedown_latex {
-	HOEDOWN_LATEX_HARD_WRAP = (1 << 0)
+	HOEDOWN_LATEX_HARD_WRAP = (1 << 0),
+	HOEDOWN_LATEX_HEADER_ID = (1 << 1)
 } hoedown_latex_flags;
 
 /*********
