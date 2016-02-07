@@ -17,17 +17,43 @@ static void escape_href(hoedown_buffer *ob, const uint8_t *source, size_t length
 	hoedown_escape_href(ob, source, length);
 }
 
+static int
+span(hoedown_buffer *ob, const char *span, const hoedown_buffer *content, const hoedown_renderer_data *data, int escape)
+{
+  if (!content || !content->size || !span)
+    return 0;
+
+  hoedown_buffer_printf(ob, "\\%s{", span);
+	if (escape)
+		escape_latex(ob, content->data, content->size);
+	else
+		hoedown_buffer_put(ob, content->data, content->size);
+  hoedown_buffer_putc(ob, '}');
+  return 1;
+}
+
+static int
+env(hoedown_buffer *ob, const char *env, const hoedown_buffer *content, const hoedown_renderer_data *data)
+{
+	if (ob->size) hoedown_buffer_putc(ob, '\n');
+	hoedown_buffer_printf(ob, "\\begin{%s}\n", env);
+	if (content) hoedown_buffer_put(ob, content->data, content->size);
+	hoedown_buffer_printf(ob, "\\end{%s}\n", env);
+  return 1;
+}
+
+
 /********************
  * GENERIC RENDERER *
  ********************/
 static void
 rndr_blockcode(hoedown_buffer *ob, const hoedown_buffer *text, const hoedown_buffer *lang, const hoedown_renderer_data *data)
 {
-	char* env = (lang) ? "minted" : "verbatim";
+	char *type = (lang) ? "minted" : "verbatim";
 
 	if (ob->size) hoedown_buffer_putc(ob, '\n');
 
-	hoedown_buffer_printf(ob, "\\begin{%s}", env);
+	hoedown_buffer_printf(ob, "\\begin{%s}", type);
 	if (lang) {
 		hoedown_buffer_putc(ob, '{');
 		escape_latex(ob, lang->data, lang->size);
@@ -37,25 +63,55 @@ rndr_blockcode(hoedown_buffer *ob, const hoedown_buffer *text, const hoedown_buf
 
 	if (text) hoedown_buffer_put(ob, text->data, text->size);
 
-	hoedown_buffer_printf(ob, "\\end{%s}\n", env);
+	hoedown_buffer_printf(ob, "\\end{%s}\n", type);
 }
 
 static void
 rndr_blockquote(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
 {
-	  if (ob->size) hoedown_buffer_putc(ob, '\n');
-		HOEDOWN_BUFPUTSL(ob, "\\begin{quotation}\n");
-		if (content) hoedown_buffer_put(ob, content->data, content->size);
-		HOEDOWN_BUFPUTSL(ob, "\\end{quotation}\n");
+	env(ob, "quotation", content, data);
 }
 
 static int
 rndr_codespan(hoedown_buffer *ob, const hoedown_buffer *text, const hoedown_renderer_data *data)
 {
-	HOEDOWN_BUFPUTSL(ob, "\\texttt{");
-	if (text) escape_latex(ob, text->data, text->size);
-	hoedown_buffer_putc(ob, '}');
-	return 1;
+	return span(ob, "texttt", text, data, 1);
+}
+
+static int
+rndr_strikethrough(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
+{
+	return span(ob, "sout", content, data, 0);
+}
+
+static int
+rndr_double_emphasis(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
+{
+	return span(ob, "textbf", content, data, 0);
+}
+
+static int
+rndr_emphasis(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
+{
+	return span(ob, "textit", content, data, 0);
+}
+
+static int
+rndr_underline(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
+{
+	return span(ob, "uline", content, data, 0);
+}
+
+static int
+rndr_highlight(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
+{
+	return span(ob, "colorbox{yellow}", content, data, 0);
+}
+
+static int
+rndr_quote(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
+{
+	return env(ob, "quote", content, data);
 }
 
 static int
@@ -130,11 +186,8 @@ rndr_link(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_buffe
 static void
 rndr_list(hoedown_buffer *ob, const hoedown_buffer *content, hoedown_list_flags flags, const hoedown_renderer_data *data)
 {
-	char* env = (flags & HOEDOWN_LIST_ORDERED) ? "enumerate" : "itemize";
-	if (ob->size) hoedown_buffer_putc(ob, '\n');
-	hoedown_buffer_printf(ob, "\\begin{%s}\n", env);
-	if (content) hoedown_buffer_put(ob, content->data, content->size);
-	hoedown_buffer_printf(ob, "\\end{%s}\n", env);
+	char *type = (flags & HOEDOWN_LIST_ORDERED) ? "enumerate" : "itemize";
+	env(ob, type, content, data);
 }
 
 static void
@@ -193,6 +246,16 @@ rndr_paragraph(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_
 	hoedown_buffer_putc(ob, '\n');
 }
 
+static int
+rndr_triple_emphasis(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
+{
+  if (!content || !content->size) return 0;
+  HOEDOWN_BUFPUTSL(ob, "\\textbf{\\textit{");
+  hoedown_buffer_put(ob, content->data, content->size);
+  HOEDOWN_BUFPUTSL(ob, "}}");
+  return 1;
+}
+
 static void
 rndr_hrule(hoedown_buffer *ob, const hoedown_renderer_data *data)
 {
@@ -228,6 +291,12 @@ rndr_raw_html(hoedown_buffer *ob, const hoedown_buffer *text, const hoedown_rend
 	return 1;
 }
 
+static int
+rndr_superscript(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
+{
+	return span(ob, "textsuperscript", content, data, 0);
+}
+
 static void
 rndr_normal_text(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
 {
@@ -259,17 +328,17 @@ hoedown_latex_renderer_new(hoedown_latex_flags render_flags, int nesting_level)
 
 		NULL, /* rndr_autolink,*/
 		rndr_codespan,
-		NULL, /* rndr_double_emphasis,*/
-		NULL, /* rndr_emphasis,*/
-		NULL, /* rndr_underline,*/
-		NULL, /* rndr_highlight,*/
-		NULL, /* rndr_quote,*/
+		rndr_double_emphasis,
+		rndr_emphasis,
+		rndr_underline,
+		rndr_highlight,
+		rndr_quote,
 		rndr_image,
 		rndr_linebreak,
 		rndr_link,
-		NULL, /* rndr_triple_emphasis,*/
-		NULL, /* rndr_strikethrough,*/
-		NULL, /* rndr_superscript,*/
+		rndr_triple_emphasis,
+		rndr_strikethrough,
+		rndr_superscript,
 		NULL, /* rndr_footnote_ref,*/
 		NULL, /* rndr_math,*/
 		rndr_raw_html,

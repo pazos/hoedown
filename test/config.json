@@ -131,6 +131,11 @@
             "output": "MarkdownTest_1.0.3/Tests/Strong and em together.html"
         },
         {
+            "input": "MarkdownTest_1.0.3/Tests/Strong and em together.text",
+            "output": "MarkdownTest_1.0.3/Tests/Strong and em together.latex",
+            "flags": ["--latex"]
+        },
+        {
             "input": "MarkdownTest_1.0.3/Tests/Tabs.text",
             "output": "MarkdownTest_1.0.3/Tests/Tabs.html"
         },
@@ -160,6 +165,68 @@
             "input": "Tests/Underline.text",
             "output": "Tests/Underline.html",
             "flags": ["--underline"]
+        },
+        {
+            "input": "Tests/Underline.text",
+            "output": "Tests/Underline.latex",
+            "flags": ["--underline", "--latex"]
+        },
+        {
+            "input": "Tests/Highlight.text",
+            "output": "Tests/Highlight.html",
+            "flags": ["--highlight"]
+        },
+        {
+            "input": "Tests/Highlight.text",
+            "output": "Tests/Highlight.latex",
+            "flags": ["--highlight", "--latex"]
+        },
+        {
+            "input": "Tests/Emphasis.text",
+            "output": "Tests/Emphasis.html"
+        },
+        {
+            "input": "Tests/Emphasis.text",
+            "output": "Tests/Emphasis.latex",
+            "flags": ["--latex"]
+        },
+        {
+            "input": "Tests/DoubleEmphasis.text",
+            "output": "Tests/DoubleEmphasis.html"
+        },
+        {
+            "input": "Tests/DoubleEmphasis.text",
+            "output": "Tests/DoubleEmphasis.latex",
+            "flags": ["--latex"]
+        },
+        {
+            "input": "Tests/TripleEmphasis.text",
+            "output": "Tests/TripleEmphasis.html"
+        },
+        {
+            "input": "Tests/TripleEmphasis.text",
+            "output": "Tests/TripleEmphasis.latex",
+            "flags": ["--latex"]
+        },
+        {
+            "input": "Tests/Superscript.text",
+            "output": "Tests/Superscript.html",
+            "flags": ["--superscript"]
+        },
+        {
+            "input": "Tests/Superscript.text",
+            "output": "Tests/Superscript.latex",
+            "flags": ["--superscript", "--latex"]
+        },
+        {
+            "input": "Tests/Quote.text",
+            "output": "Tests/Quote.html",
+            "flags": ["--quote"]
+        },
+        {
+            "input": "Tests/Quote.text",
+            "output": "Tests/Quote.latex",
+            "flags": ["--quote", "--latex"]
         },
         {
             "input": "Tests/Table.text",
