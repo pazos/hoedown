@@ -2285,7 +2285,7 @@ parse_table_row(
 			cell_end--;
 
 		parse_inline(cell_work, doc, data + cell_start, 1 + cell_end - cell_start);
-		doc->md.table_cell(row_work, cell_work, col_data[col] | header_flag, &doc->data);
+		doc->md.table_cell(row_work, cell_work, col_data[col] | header_flag, &doc->data, col);
 
 		popbuf(doc, BUFFER_SPAN);
 		i++;
@@ -2293,7 +2293,7 @@ parse_table_row(
 
 	for (; col < columns; ++col) {
 		hoedown_buffer empty_cell = { 0, 0, 0, 0, NULL, NULL, NULL };
-		doc->md.table_cell(row_work, &empty_cell, col_data[col] | header_flag, &doc->data);
+		doc->md.table_cell(row_work, &empty_cell, col_data[col] | header_flag, &doc->data, col);
 	}
 
 	doc->md.table_row(ob, row_work, &doc->data);
@@ -2450,7 +2450,7 @@ parse_table(
             doc->md.table_body(work, body_work, &doc->data);
 
 		if (doc->md.table)
-			doc->md.table(ob, work, &doc->data);
+			doc->md.table(ob, work, &doc->data, columns, col_data);
 	}
 
 	free(col_data);

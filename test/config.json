@@ -234,6 +234,11 @@
             "flags": ["--tables"]
         },
         {
+            "input": "Tests/Table.text",
+            "output": "Tests/Table.latex",
+            "flags": ["--latex", "--tables"]
+        },
+        {
             "input": "Tests/FencedCode.text",
             "output": "Tests/FencedCode.html",
             "flags": ["--fenced-code"]
@@ -245,8 +250,7 @@
         },
         {
             "input": "Tests/Images.text",
-            "output": "Tests/Images.html",
-            "flags": []
+            "output": "Tests/Images.html"
         },
         {
             "input": "Tests/Images.text",

@@ -291,6 +291,57 @@ rndr_raw_html(hoedown_buffer *ob, const hoedown_buffer *text, const hoedown_rend
 	return 1;
 }
 
+
+static void
+rndr_table(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data, size_t columns, hoedown_table_flags *col_data)
+{
+	size_t col;
+	if (ob->size) hoedown_buffer_putc(ob, '\n');
+
+	HOEDOWN_BUFPUTSL(ob, "\\begin{tabular}{|");
+	for (col = 0; col < columns; ++col) {
+		switch (col_data[col] & HOEDOWN_TABLE_ALIGNMASK) {
+			case HOEDOWN_TABLE_ALIGN_CENTER:
+				HOEDOWN_BUFPUTSL(ob, "c|"); break;
+			case HOEDOWN_TABLE_ALIGN_LEFT:
+				HOEDOWN_BUFPUTSL(ob, "l|"); break;
+			case HOEDOWN_TABLE_ALIGN_RIGHT:
+			default:
+				HOEDOWN_BUFPUTSL(ob, "r|"); break;
+		}
+	}
+	HOEDOWN_BUFPUTSL(ob, "}\\hline\n");
+
+	hoedown_buffer_put(ob, content->data, content->size);
+	HOEDOWN_BUFPUTSL(ob, "\\end{tabular}\n");
+}
+
+static void
+rndr_table_header(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
+{
+	hoedown_buffer_put(ob, content->data, content->size);
+}
+
+static void
+rndr_table_body(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
+{
+	hoedown_buffer_put(ob, content->data, content->size);
+}
+
+static void
+rndr_tablerow(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
+{
+	hoedown_buffer_put(ob, content->data, content->size);
+	HOEDOWN_BUFPUTSL(ob, "\\\\\\hline\n");
+}
+
+static void
+rndr_tablecell(hoedown_buffer *ob, const hoedown_buffer *content, hoedown_table_flags flags, const hoedown_renderer_data *data, size_t col)
+{
+	if (col > 0) HOEDOWN_BUFPUTSL(ob, " & ");
+	hoedown_buffer_put(ob, content->data, content->size);
+}
+
 static int
 rndr_superscript(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_renderer_data *data)
 {
@@ -317,11 +368,11 @@ hoedown_latex_renderer_new(hoedown_latex_flags render_flags, int nesting_level)
 		rndr_list,
 		rndr_listitem,
 		rndr_paragraph,
-		NULL, /* rndr_table,*/
-		NULL, /* rndr_table_header,*/
-		NULL, /* rndr_table_body,*/
-		NULL, /* rndr_tablerow,*/
-		NULL, /* rndr_tablecell,*/
+		rndr_table,
+		rndr_table_header,
+		rndr_table_body,
+		rndr_tablerow,
+		rndr_tablecell,
 		NULL, /* rndr_footnotes,*/
 		NULL, /* rndr_footnote_def,*/
 		NULL, /* rndr_raw_block,*/
