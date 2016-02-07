@@ -367,6 +367,15 @@ rndr_footnote_ref(hoedown_buffer *ob, const hoedown_buffer *content, unsigned in
 	return span(ob, "footnote", content, data, 0);
 }
 
+static int
+rndr_math(hoedown_buffer *ob, const hoedown_buffer *text, int displaymode, const hoedown_renderer_data *data)
+{
+	HOEDOWN_BUFPUTSL(ob, "$");
+	hoedown_buffer_put(ob, text->data, text->size);
+	HOEDOWN_BUFPUTSL(ob, "$");
+	return 1;
+}
+
 hoedown_renderer *
 hoedown_latex_renderer_new(hoedown_latex_flags render_flags, int nesting_level)
 {
@@ -386,7 +395,7 @@ hoedown_latex_renderer_new(hoedown_latex_flags render_flags, int nesting_level)
 		rndr_tablerow,
 		rndr_tablecell,
 		rndr_footnotes,
-		NULL, /* rndr_footnote_def,*/
+		NULL, /* rndr_footnote_def, */ /* unnecessary for this renderer */
 		NULL, /* rndr_raw_block,*/
 
 		NULL, /* rndr_autolink,*/
@@ -403,7 +412,7 @@ hoedown_latex_renderer_new(hoedown_latex_flags render_flags, int nesting_level)
 		rndr_strikethrough,
 		rndr_superscript,
 		rndr_footnote_ref,
-		NULL, /* rndr_math,*/
+		rndr_math,
 		rndr_raw_html,
 
 		NULL,

@@ -162,6 +162,11 @@
             "flags": ["--math"]
         },
         {
+            "input": "Tests/Math.text",
+            "output": "Tests/Math.latex",
+            "flags": ["--math", "--latex"]
+        },
+        {
             "input": "Tests/Underline.text",
             "output": "Tests/Underline.html",
             "flags": ["--underline"]
