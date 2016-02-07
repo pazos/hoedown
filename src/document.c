@@ -1157,7 +1157,7 @@ char_link(hoedown_buffer *ob, hoedown_document *doc, uint8_t *data, size_t offse
 
 			/* render */
 			if (doc->md.footnote_ref)
-				ret = doc->md.footnote_ref(ob, fr->num, &doc->data);
+				ret = doc->md.footnote_ref(ob, fr->contents, fr->num, &doc->data);
 		}
 
 		goto cleanup;

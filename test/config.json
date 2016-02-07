@@ -239,6 +239,16 @@
             "flags": ["--latex", "--tables"]
         },
         {
+            "input": "Tests/Footnotes.text",
+            "output": "Tests/Footnotes.html",
+            "flags": ["--footnotes"]
+        },
+        {
+            "input": "Tests/Footnotes.text",
+            "output": "Tests/Footnotes.latex",
+            "flags": ["--latex", "--footnotes"]
+        },
+        {
             "input": "Tests/FencedCode.text",
             "output": "Tests/FencedCode.html",
             "flags": ["--fenced-code"]
