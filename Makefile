@@ -22,6 +22,7 @@ HOEDOWN_SRC=\
 	src/html.o \
 	src/html_blocks.o \
 	src/html_smartypants.o \
+	src/latex.o \
 	src/stack.o \
 	src/version.o
 
